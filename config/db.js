@@ -1,7 +1,15 @@
 const { connect } = require("mongoose");
-mongoose.connect("mongodb://localhost:27017/test");
+const connectDB = async () => {
+  try {
+    const db = await connect(process.env.CONNECT_DB_URI);
+    console.log(
+      `MongoDb is connected on host:${db.connection.host}, on PORT:${db.connection.port}, db name:${db.connection.name}`
+        .cyan.bold
+    );
+  } catch (error) {
+    console.log(error.message.yellow);
+    process.exit(1);
+  }
+};
 
-const Cat = mongoose.model("Cat", { name: String });
-
-const kitty = new Cat({ name: "Zildjian" });
-kitty.save().then(() => console.log("meow"));
+module.exports = connectDB;
